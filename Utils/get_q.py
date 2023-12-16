@@ -19,6 +19,10 @@ class LogEpochIntermediateCallcack(Callback):
     self.CFG = CFG
     self.X_train = X_train
     self.path = path
+    if self.CFG['M'] == 60000:
+      idx = np.random.choice(X_train.shape[0], size=6000, replace=False)
+      X_train_ = X_train[idx]
+      print(X_train_.shape)
     
 
 

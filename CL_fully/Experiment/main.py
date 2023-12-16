@@ -32,8 +32,11 @@ if __name__ == "__main__":
         
         runner = Runner(run_configs)
         X_train,y_train, X_test, y_test = runner.preprocessing()
+        print(X_train.shape)
+        print(X_test.shape)
+        """
         X_train,X_test, pca1, scaler1 = runner.PCA_SS(X_train, X_test)
         runner.train_model(X_train, y_train, X_test, y_test)
-        
+        """
 
                 

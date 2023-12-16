@@ -36,24 +36,32 @@ class Runner:
     def preprocessing(self) -> np.ndarray:
         X_train = self.X_train
         X_test = self.X_test
-        y_train_ = self.y_train
-        y_test_ = self.y_test
+        y_train = self.y_train
+        y_test = self.y_test
         set_seed(self.set['data_seed'])
         
-        X_train_ = X_train.reshape(X_train.shape[0], -1)
-        X_test_ = X_test.reshape(X_test.shape[0], -1)
+        X_train = X_train.reshape(X_train.shape[0], -1)
+        X_test = X_test.reshape(X_test.shape[0], -1)
 
-        X_train_ = X_train_ / 255
-        X_test_ = X_test_ / 255
+        X_train = X_train / 255
+        X_test = X_test / 255
         # Use 32-bit instead of 64-bit float
-        X_train_ = X_train_.astype("float32")
-        X_test_ = X_test_.astype("float32")
+        X_train = X_train.astype("float32")
+        X_test = X_test.astype("float32")
         
-        idx = np.random.choice(X_train_.shape[0], size=self.set['M'])
-        X_train_ = X_train_[idx]
-        y_train_ = y_train_[idx]
-        return X_train_, y_train_, X_test_, y_test_
+        idx = np.random.choice(X_train.shape[0], size=self.set['M'])
+        X_train = X_train[idx]
+        y_train = y_train[idx]
+        
+        X_train_out = X_train
+        X_test_out = X_test
+        y_train_out = y_train
+        y_test_out = y_test
     
+        return X_train_out, y_train_out, X_test_out, y_test_out
+    
+
+        
     def PCA_SS(self,input_train,input_test):
         # Make an instance of the Model
         pca = PCA(n_components=self.set['N'])
