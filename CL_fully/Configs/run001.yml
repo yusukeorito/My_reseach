@@ -20,6 +20,7 @@ setting : {
   'data_seed': 4244, #データのサンプリングを固定するためのseed
   'seed1' : 820,
   'seed2' : 314,
+  'seed3' : 1228,
 }
 
 params : {

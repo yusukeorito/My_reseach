@@ -69,7 +69,7 @@ class Runner:
     def train_model(self, X_train, y_train, X_test, y_test):
         params=self.params
         CFG = self.set
-    
+        
         
         set_seed(self.set['seed1'])
         w_intializer1 = tf.keras.initializers.RandomNormal(mean=0, stddev=1)
@@ -88,11 +88,21 @@ class Runner:
         joblib.dump(history1.history, f"../Output/Loss/model001_{CFG['data_name']}_ini{CFG['ini_type']}_M{CFG['M']}_L{CFG['L']}_seed{CFG['seed1']}.pkl")
         
         
-        set_seed(self.set['seed2'])
-        w_intializer2 = tf.keras.initializers.RandomNormal(mean=0, stddev=1)
-        bias_initializer2 = tf.keras.initializers.Constant(0.1)
+        if self.set['ini_type'] == 'A':
+            print('='*15+'ini_type A'+'='*15)
+            set_seed(self.set['seed2'])
+            w_intializer2 = tf.keras.initializers.RandomNormal(mean=0, stddev=1)
+            bias_initializer2 = tf.keras.initializers.Constant(0.1)
+        elif self.set['ini_type'] == 'B':
+            print('='*15+'ini type B'+'='*15)
+            w_intializer2 = w_intializer1
+            bias_initializer2 = bias_initializer1
+            set_seed(self.set['seed3'])
+        
+        
         model2 = create_fully_model(params=params,W=w_intializer2,B=bias_initializer2)
         
+    
         history2 = model2.fit(X_train, y_train,
                 batch_size=params["batch_size"],
                 epochs=params["epochs"],
