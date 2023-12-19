@@ -7,6 +7,28 @@ from tqdm import tqdm
 import tensorflow as tf
 from tensorflow.keras.callbacks import Callback,ModelCheckpoint
 
+class CustomConstraint(tf.keras.constraints.Constraint):
+    def __init__(self, mask, const):
+        self.mask = mask
+        self.const = const
+
+    def __call__(self, w):
+        # マスク行列を使用して、指定された部分を0で固定する
+        w.assign(tf.math.multiply(w, self.mask) + self.const)
+        return w
+ 
+ 
+      
+def get_mask(shape, C, dtype=int):
+    masks = np.zeros(shape)
+    consts = np.random.normal(size=shape)
+    for col in range(shape[1]):
+        non_zero_indices = np.random.choice(shape[0], C, replace=False)
+        masks[non_zero_indices, col] = 1
+        consts[non_zero_indices, col] = 0
+    masks = tf.constant(masks, dtype=tf.float32)
+    consts = tf.constant(consts, dtype=tf.float32)
+    return masks, consts
 
 
 
