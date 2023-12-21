@@ -77,7 +77,7 @@ def create_sparse_model(params:dict, W, B, Mask_list,Const_list):
         model.add(BatchNormalization(name=f'batch_normalization{i+1}'))
         model.add(Activation(params['activation'],name=f'activation{i+1}'))
         
-    model.add(Dense(params['num_classes'],kernel_initializer=W,bias_initializer=B,name='output',kernel_constraint=CustomConstraint(mask=Mask_list[9],const=Const_list[9])))
+    model.add(Dense(params['num_classes'],kernel_initializer=W,bias_initializer=B,name='output',kernel_constraint=CustomConstraint(mask=Mask_list[params["num_layers"]-1],const=Const_list[params["num_layers"]-1])))
     model.add(BatchNormalization(name=f'batch_normalization{params["num_layers"]}'))
     model.add(Activation('softmax', name=f'activation{params["num_layers"]}'))
     model.compile(loss=params['loss'], optimizer=params['optimizer'],metrics=[params['metric']])
