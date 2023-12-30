@@ -32,8 +32,8 @@ class Runner:
         if self.set['data_name'] == 'MNIST':
             self.X_train, self.y_train, self.X_test, self.y_test = load_mnist_data(configs["input_path"])
         elif self.set['data_name'] == 'fashion-MNIST':
-            X_train, y_train = load_fashion_mnist('../../Data/', kind='train')
-            X_test, y_test = load_fashion_mnist('../../Data', kind='t10k')
+            self.X_train, self.y_train = load_fashion_mnist('../../Data/', kind='train')
+            self.X_test, self.y_test = load_fashion_mnist('../../Data', kind='t10k')
             
 
         
