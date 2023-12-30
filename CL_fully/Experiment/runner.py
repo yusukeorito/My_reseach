@@ -25,12 +25,16 @@ class Runner:
         self.run_name = configs["run_name"]
         self.description = configs["description"]
         self.run_id = None
-        self.X_train, self.y_train, self.X_test, self.y_test = load_mnist_data(configs["input_path"])
         self.params = configs["params"]
         self.set = configs["setting"]
         self.layer_list = configs["layer_name_list"]
         self.output_path = configs["output_path"]
-    
+        if self.set['data_name'] == 'MNIST':
+            self.X_train, self.y_train, self.X_test, self.y_test = load_mnist_data(configs["input_path"])
+        elif self.set['data_name'] == 'fashion-MNIST':
+            X_train, y_train = load_fashion_mnist('../../Data/', kind='train')
+            X_test, y_test = load_fashion_mnist('../../Data', kind='t10k')
+            
 
         
     def preprocessing(self) -> np.ndarray:
