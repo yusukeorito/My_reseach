@@ -99,8 +99,8 @@ class Runner:
                 verbose=1,
                 shuffle=True,
                 validation_data=(X_test, y_test),
-                callbacks=[LogEpochIntermediateCallcack(layer_name_list=self.layer_list,CFG=self.set,X_train=X_train,
-                                                        path=f"../Output/Spin/spinA_{CFG['data_name']}_ini{CFG['ini_type']}_M{CFG['M']}_L{CFG['L']}_seed{CFG['seed1']}.pkl")]
+                #callbacks=[LogEpochIntermediateCallcack(layer_name_list=self.layer_list,CFG=self.set,X_train=X_train,
+                                                        #path=f"../Output/Spin/spinA_{CFG['data_name']}_ini{CFG['ini_type']}_M{CFG['M']}_L{CFG['L']}_seed{CFG['seed1']}.pkl")]
                 )
         
         joblib.dump(history1.history, f"../Output/Loss/model001_{CFG['data_name']}_ini{CFG['ini_type']}_M{CFG['M']}_L{CFG['L']}_seed{CFG['seed1']}.pkl")

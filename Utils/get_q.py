@@ -43,8 +43,8 @@ class LogEpochIntermediateCallcack(Callback):
     self.path = path
     if self.CFG['M'] == 60000:
       idx = np.random.choice(X_train.shape[0], size=6000, replace=False)
-      X_train_ = X_train[idx]
-      print(X_train_.shape)
+      self.X_train_ = X_train[idx]
+      print(self.X_train_.shape)
     
 
 
@@ -54,7 +54,7 @@ class LogEpochIntermediateCallcack(Callback):
     for l in self.layer_name_list:
       intermediate_layer_model = tf.keras.Model(inputs=self.model.input,outputs=self.model.get_layer(l).output)
       if self.CFG['M'] == 60000:
-        intermediate_output = intermediate_layer_model.predict(X_train_)
+        intermediate_output = intermediate_layer_model.predict(self.X_train_)
       else:
         intermediate_output = intermediate_layer_model.predict(self.X_train)
       #intermediate_output_test = intermediate_layer_model.predict(test_in)
@@ -70,7 +70,7 @@ class LogEpochIntermediateCallcack(Callback):
         for l in self.layer_name_list:
           intermediate_layer_model = tf.keras.Model(inputs=self.model.input,outputs=self.model.get_layer(l).output)
           if self.CFG['M'] == 60000:
-            intermediate_output = intermediate_layer_model.predict(X_train_)
+            intermediate_output = intermediate_layer_model.predict(self.X_train_)
           else:
             intermediate_output = intermediate_layer_model.predict(self.X_train)
           #intermediate_output_test = intermediate_layer_model.predict(test_in)
