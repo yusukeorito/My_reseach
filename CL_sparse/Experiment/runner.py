@@ -92,7 +92,7 @@ class Runner:
         set_seed(self.set['seed1'])
         w_intializer1 = tf.keras.initializers.RandomNormal(mean=0, stddev=1)
         bias_initializer1 = tf.keras.initializers.Constant(0.1)
-        model1 = create_sparse_model(params=params,W=w_intializer1,B=bias_initializer1,Mask_list=mask_list,Const_list=const_list)
+        model1 = create_dense_coupling_model(params=params,W=w_intializer1,B=bias_initializer1,Mask_list=mask_list,Const_list=const_list)
         history1 = model1.fit(X_train, y_train,
                 batch_size=params["batch_size"],
                 epochs=params["epochs"],
@@ -118,7 +118,7 @@ class Runner:
             set_seed(self.set['seed3'])
         
         
-        model2 = create_sparse_model(params=params,W=w_intializer2,B=bias_initializer2,Mask_list=mask_list,Const_list=const_list)
+        model2 = create_dense_coupling_model(params=params,W=w_intializer2,B=bias_initializer2,Mask_list=mask_list,Const_list=const_list)
         
     
         history2 = model2.fit(X_train, y_train,
