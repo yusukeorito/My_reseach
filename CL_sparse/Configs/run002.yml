@@ -34,7 +34,7 @@ params : {
   'loss': 'sparse_categorical_crossentropy',
   'metric': 'accuracy',
   'optimizer': 'adam',
-  'epochs': 5,
+  'epochs': 10,
   'batch_size': 256
 }
 

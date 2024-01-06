@@ -121,3 +121,30 @@ def create_sparse_model(params:dict, W, B, Mask_list,Const_list):
     model.add(Activation('softmax', name=f'activation{params["num_layers"]}'))
     model.compile(loss=params['loss'], optimizer=params['optimizer'],metrics=[params['metric']])
     return model
+
+
+class CustomConstraint(tf.keras.constraints.Constraint):
+    def __init__(self, mask, const):
+        self.mask = mask
+        self.const = const
+
+    def __call__(self, w):
+        # マスク行列を使用して、指定された部分を0で固定する
+        w.assign(tf.math.multiply(w, self.mask) + self.const)
+        return w
+
+class DenseCoupleConstraint(tf.keras.constraints.Constraint):
+    def __init__(self, mask):
+        self.mask = mask
+
+    def __call__(self, w):
+        # マスク行列を使用して、指定された部分を0で固定する
+        w.assign(tf.math.multiply(w, self.mask))
+        return w 
+    
+    
+class Layer1WeightsCallback(tf.keras.callbacks.Callback):
+    def on_epoch_end(self, epoch, logs=None):
+        layer1_weights = self.model.layers[0].get_weights()[0][:,1]
+        print(f"Epoch {epoch + 1} - Layer 1 Weights:")
+        print(layer1_weights)
