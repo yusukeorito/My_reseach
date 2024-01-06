@@ -1,0 +1,40 @@
+description: 'This is a test run'
+exp_name: 'Classification for sparse-connected'
+run_name: 'run001'
+input_path: '/Users/oritoyusuke/Desktop/My_research/Data/mnist.npz'
+output_path: '/Users/oritoyusuke/Desktop/My_research/CL_sparse/Output/'
+
+
+
+layer_name_list: ['batch_normalization1', 'batch_normalization2', 'batch_normalization3','batch_normalization4', 'batch_normalization5',
+                  'batch_normalization6', 'batch_normalization7', 'batch_normalization8','batch_normalization9','batch_normalization10',]
+
+setting : {
+  'N': 100,
+  'M': 6000,
+  'L': 10,
+  'C': 10,
+  'ini_type' : 'A',
+  'data_name': 'MNIST',
+
+
+  'data_seed': 4244, #データのサンプリングを固定するためのseed
+  'seed1' : 820,
+  'seed2' : 314,
+  'seed3' : 1228,
+}
+
+params : {
+  'N': 100,
+  'num_classes': 10,
+  'num_layers': 10,
+  'activation': 'relu',
+  'activation_last': 'softmax',
+  'learning_rate': 0.1,
+  'loss': 'sparse_categorical_crossentropy',
+  'metric': 'accuracy',
+  'optimizer': 'adam',
+  'epochs': 5,
+  'batch_size': 256
+}
+

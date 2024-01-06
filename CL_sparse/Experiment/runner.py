@@ -25,12 +25,16 @@ class Runner:
         self.run_name = configs["run_name"]
         self.description = configs["description"]
         self.run_id = None
-        self.X_train, self.y_train, self.X_test, self.y_test = load_mnist_data(configs["input_path"])
         self.params = configs["params"]
         self.set = configs["setting"]
         self.layer_list = configs["layer_name_list"]
         self.output_path = configs["output_path"]
-    
+        if self.set['data_name'] == 'MNIST':
+            self.X_train, self.y_train, self.X_test, self.y_test = load_mnist_data(configs["input_path"])
+        elif self.set['data_name'] == 'Fashion-MNIST':
+            self.X_train, self.y_train = load_fashion_mnist('../../Data/', kind='train')
+            self.X_test, self.y_test = load_fashion_mnist('../../Data', kind='t10k')
+            
 
         
     def preprocessing(self) -> np.ndarray:
@@ -77,17 +81,18 @@ class Runner:
     def train_model(self, X_train, y_train, X_test, y_test):
         params=self.params
         CFG = self.set
+        
         mask_list = []
         const_list = []
         for i in range(CFG['L']-1):
-            mask,const = get_mask(shape=(100,100),C=CFG['C'])
+            mask,const = get_mask(shape=(100,100),C=10)
             mask_list.append(mask)
             const_list.append(const)
-            
-        mask, const = get_mask(shape=(100,10),C=CFG.C)
+                    
+        mask, const = get_mask(shape=(100,10),C=10)
         mask_list.append(mask)
         const_list.append(const)
-            
+        
         
         set_seed(self.set['seed1'])
         w_intializer1 = tf.keras.initializers.RandomNormal(mean=0, stddev=1)
@@ -99,8 +104,8 @@ class Runner:
                 verbose=1,
                 shuffle=True,
                 validation_data=(X_test, y_test),
-                #callbacks=[LogEpochIntermediateCallcack(layer_name_list=self.layer_list,CFG=self.set,X_train=X_train,
-                                                        #path=f"../Output/Spin/spinA_{CFG['data_name']}_ini{CFG['ini_type']}_M{CFG['M']}_L{CFG['L']}_seed{CFG['seed1']}.pkl")]
+                callbacks=[LogEpochIntermediateCallcack(layer_name_list=self.layer_list,CFG=self.set,X_train=X_train,
+                                                        path=f"../Output/Spin/spinA_{CFG['data_name']}_ini{CFG['ini_type']}_M{CFG['M']}_L{CFG['L']}_seed{CFG['seed1']}.pkl")]
                 )
         
         joblib.dump(history1.history, f"../Output/Loss/model001_{CFG['data_name']}_ini{CFG['ini_type']}_M{CFG['M']}_L{CFG['L']}_seed{CFG['seed1']}.pkl")
@@ -119,8 +124,6 @@ class Runner:
         
         
         model2 = create_dense_coupling_model(params=params,W=w_intializer2,B=bias_initializer2,Mask_list=mask_list,Const_list=const_list)
-        
-    
         history2 = model2.fit(X_train, y_train,
                 batch_size=params["batch_size"],
                 epochs=params["epochs"],
