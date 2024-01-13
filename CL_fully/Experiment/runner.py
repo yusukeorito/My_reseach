@@ -53,9 +53,6 @@ class Runner:
         X_train = X_train.astype("float32")
         X_test = X_test.astype("float32")
         
-        idx = np.random.choice(X_train.shape[0], size=self.set['M'])
-        X_train = X_train[idx]
-        y_train = y_train[idx]
         
         X_train_out = X_train
         X_test_out = X_test
@@ -81,6 +78,16 @@ class Runner:
     def train_model(self, X_train, y_train, X_test, y_test):
         params=self.params
         CFG = self.set
+        if CFG['M'] == 60000:
+            print('M=60000')
+            idx = np.random.choice(X_train.shape[0], size=6000, replace=False)
+            X_train_ = X_train[idx]
+            y_train_ = y_train[idx]
+            print('X_train for mesure:',X_train_.shape,'y_train for mesure:',y_train_.shape, )
+        else:
+            X_train_ = X_train
+            y_train_ = y_train
+            print('X_train for mesure:',X_train_.shape,'y_train for mesure:',y_train_.shape, )
         
         
         set_seed(self.set['seed1'])
@@ -93,7 +100,7 @@ class Runner:
                 verbose=1,
                 shuffle=True,
                 validation_data=(X_test, y_test),
-                callbacks=[LogEpochIntermediateCallcack(layer_name_list=self.layer_list,CFG=self.set,X_train=X_train,
+                callbacks=[LogEpochIntermediateCallcack(layer_name_list=self.layer_list,CFG=self.set,X_train_m=X_train_,
                                                         path=f"../Output/Spin/spinA_{CFG['data_name']}_ini{CFG['ini_type']}_M{CFG['M']}_L{CFG['L']}_seed{CFG['seed1']}.pkl")]
                 )
         
@@ -121,7 +128,7 @@ class Runner:
                 verbose=1,
                 shuffle=True,
                 validation_data=(X_test, y_test),
-                callbacks=[LogEpochIntermediateCallcack(layer_name_list=self.layer_list,CFG=self.set,X_train=X_train,
+                callbacks=[LogEpochIntermediateCallcack(layer_name_list=self.layer_list,CFG=self.set,X_train_m=X_train_,
                                                         path=f"../Output/Spin/spinB_{CFG['data_name']}_ini{CFG['ini_type']}_M{CFG['M']}_L{CFG['L']}_seed{CFG['seed2']}.pkl")]
                 )
         joblib.dump(history1.history, f"../Output/Loss/model002_{CFG['data_name']}_ini{CFG['ini_type']}_M{CFG['M']}_L{CFG['L']}_seed{CFG['seed2']}.pkl")
