@@ -40,36 +40,25 @@ def get_mask(shape, C, dtype=int):
     return masks, consts
 
 
-
 class LogEpochIntermediateCallcack(Callback):
-  def __init__(self, layer_name_list,CFG,X_train,path):
+  def __init__(self, layer_name_list,CFG,X_train_m,path):
     self.layer_name_list = layer_name_list
     self.spin_dict = {key: [] for key in self.layer_name_list}
-    #self.spin_dict_test = {key: [] for key in self.layer_name_list}
     self.nextMeas=1
     self.CFG = CFG
-    self.X_train = X_train
+    self.X_train_m = X_train_m
     self.path = path
-    if self.CFG['M'] == 60000:
-      idx = np.random.choice(X_train.shape[0], size=6000, replace=False)
-      self.X_train_ = X_train[idx]
-      print(self.X_train_.shape)
     
-
-
+  
+  
   def on_train_begin(self, batch, logs=None):
     self.spin_dict['time'] = [0]
-    #self.spin_dict_test['time'] = [0]
     for l in self.layer_name_list:
       intermediate_layer_model = tf.keras.Model(inputs=self.model.input,outputs=self.model.get_layer(l).output)
-      if self.CFG['M'] == 60000:
-        intermediate_output = intermediate_layer_model.predict(self.X_train_)
-      else:
-        intermediate_output = intermediate_layer_model.predict(self.X_train)
-      #intermediate_output_test = intermediate_layer_model.predict(test_in)
+      intermediate_output = intermediate_layer_model.predict(self.X_train_m)
       tf.keras.backend.clear_session()
       self.spin_dict[l].append(intermediate_output)
-      #self.spin_dict_test[l].append(intermediate_output_test)
+      
 
   def on_epoch_begin(self, epoch, logs=None):
       self.ep = epoch
@@ -78,17 +67,14 @@ class LogEpochIntermediateCallcack(Callback):
       if self.ep+1==self.nextMeas:
         for l in self.layer_name_list:
           intermediate_layer_model = tf.keras.Model(inputs=self.model.input,outputs=self.model.get_layer(l).output)
-          if self.CFG['M'] == 60000:
-            intermediate_output = intermediate_layer_model.predict(self.X_train_)
-          else:
-            intermediate_output = intermediate_layer_model.predict(self.X_train)
-          #intermediate_output_test = intermediate_layer_model.predict(test_in)
+          intermediate_output = intermediate_layer_model.predict(self.X_train_m)
+  
           tf.keras.backend.clear_session()
           self.spin_dict[l].append(intermediate_output)
-          #self.spin_dict_test[l].append(intermediate_output_test)
+          
         self.spin_dict['time']+=[self.ep+1]
-        #self.spin_dict_test['time']+=[self.ep+1]
         self.nextMeas=int(self.nextMeas*1.1)
+        
         if self.ep+1==self.nextMeas:
           self.nextMeas = self.nextMeas+1
 
@@ -96,10 +82,8 @@ class LogEpochIntermediateCallcack(Callback):
   def on_train_end(self, logs=None):
     for l in self.layer_name_list:
       self.spin_dict[l] = np.array(self.spin_dict[l])
-      #self.spin_dict_test[l] = np.array(self.spin_dict_test[l])
     joblib.dump(self.spin_dict,self.path)
-    #with open(f'./Output/Spin/M600/model{self.model_num}_M{CFG.M}_L{CFG.L}_A{CFG.A}_test.txt','wb') as handle:
-        #pickle.dump(self.spin_dict_test, handle)
+ 
 
 
 
